@@ -1,34 +1,38 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+// /app/(tabs)/_layout.tsx
+import { Tabs } from "expo-router";
+import Feather from "@expo/vector-icons/Feather";
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-      }}>
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name="habit"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+          title: "Habits",
+          tabBarIcon: ({ color }) => (
+            <Feather size={28} name="check" color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="todo"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          title: "Tasks",
+          tabBarIcon: ({ color }) => (
+            <Feather size={28} name="clipboard" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="reward"
+        options={{
+          title: "Rewards",
+          tabBarIcon: ({ color }) => (
+            <Feather size={28} name="gift" color={color} />
           ),
         }}
       />
