@@ -14,87 +14,25 @@ import { AddNewButton } from "@/components/AddNewButton";
 import { router, useFocusEffect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppData } from "@/hooks/useAppData";
+import { useBackgroundTasks } from "@/hooks/useBackgroundTasks";
 import React from "react";
 import * as Utils from '@/app/utility';
 import { ReorderableList } from '@/components/ReorderableList';
 
 const HabitScreen = () => {
   const { appData, isLoading, updateHabit, deleteHabit, refreshData } = useAppData();
+  const { registerBackgroundTasks } = useBackgroundTasks();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [lastCheck, setLastCheck] = useState<Date>(new Date());
+
+  useEffect(() => {
+    registerBackgroundTasks();
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
       refreshData();
     }, [])
   );
-
-  useEffect(() => {
-    const checkAndResetHabits = async () => {
-      const now = new Date();
-      if (now.getTime() - lastCheck.getTime() < 60000) return;
-      setLastCheck(now);
-      
-      if (!appData?.habits) return;
-    
-      let hasUpdates = false;
-      const updatedHabits = { ...appData.habits };
-    
-      for (const habitId in updatedHabits) {
-        const habit = updatedHabits[habitId];
-        const lastCompleted = habit.lastCompletedDate
-          ? new Date(habit.lastCompletedDate)
-          : null;
-    
-        if (!lastCompleted || !habit.done) continue;
-    
-        if (habit.frequency === "daily") {
-          const isNewDay = 
-            now.getDate() !== lastCompleted.getDate() ||
-            now.getMonth() !== lastCompleted.getMonth() ||
-            now.getFullYear() !== lastCompleted.getFullYear();
-    
-          if (isNewDay && habit.done) {
-            hasUpdates = true;
-            await updateHabit({
-              ...habit,
-              done: false,
-              currentStreak: habit.currentStreak,
-              maxStreak: habit.maxStreak,
-              lastCompletedDate: undefined,
-            });
-          }
-        }
-
-        else if (habit.frequency === "weekly") {
-          const isNewWeek = 
-            now.getDay() === 1 &&
-            (lastCompleted.getDay() !== 1 ||
-            now.getTime() - lastCompleted.getTime() > 7 * 24 * 60 * 60 * 1000);
-    
-          if (isNewWeek && habit.done) {
-            hasUpdates = true;
-            await updateHabit({
-              ...habit,
-              done: false,
-              currentStreak: habit.currentStreak,
-              maxStreak: habit.maxStreak,
-              lastCompletedDate: undefined,
-            });
-          }
-        }
-      }
-    
-      if (hasUpdates) {
-        refreshData();
-      }
-    };    
-
-    const interval = setInterval(checkAndResetHabits, 60000);
-    checkAndResetHabits();
-
-    return () => clearInterval(interval);
-  }, [updateHabit, refreshData, lastCheck]);
 
   const handleToggleHabit = async (habit: Habit) => {
     try {

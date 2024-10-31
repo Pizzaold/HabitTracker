@@ -28,7 +28,13 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-background-fetch",
+        {
+          "startOnBoot": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

@@ -66,23 +66,22 @@ export function useAppData() {
     }
   };
 
-  // Modified update functions to handle points
   const updateHabit = async (habit: Habit) => {
     const wasCompletedBefore = appData.habits[habit.id!]?.done || false;
     const isCompletingNow = !wasCompletedBefore && habit.done;
-    const isUncompletingNow = wasCompletedBefore && !habit.done;
+    const isUserUncompletingNow = wasCompletedBefore && !habit.done && habit.lastCompletedDate;
 
     let updatedData = await Utils.updateHabit(appData, habit);
     
     if (isCompletingNow) {
-      updatedData = await Utils.updatePoints(updatedData, updatedData.points + habit.points);
-    } else if (isUncompletingNow) {
-      updatedData = await Utils.updatePoints(updatedData, updatedData.points - habit.points);
+        updatedData = await Utils.updatePoints(updatedData, updatedData.points + habit.points);
+    } else if (isUserUncompletingNow) {
+        updatedData = await Utils.updatePoints(updatedData, updatedData.points - habit.points);
     }
     
     setAppData(updatedData);
     return updatedData;
-  };
+};
 
   const updateTodo = async (todo: Todo) => {
     const wasCompletedBefore = appData.todo[todo.id!]?.done || false;
