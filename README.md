@@ -1,6 +1,6 @@
 # Habit Tracker App
 
-A mobile application built with React Native and Expo that I made for my self to helps me build better habits through gamification. You can track habits, complete todos, and earn points to claim rewards.
+A mobile application built with React Native and Expo that I made for myself to help me build better habits through gamification. You can track habits, complete todos, and earn points to claim rewards.
 
 ## Features
 
