@@ -1,50 +1,132 @@
-# Welcome to your Expo app 👋
+# Habit Tracker App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile application built with React Native and Expo that I made for my self to helps me build better habits through gamification. You can track habits, complete todos, and earn points to claim rewards.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Habit Tracking**
+  - Create daily and weekly habits
+  - Track completion streaks
+  - Automatic reset at midnight for daily habits
+  - Automatic reset on Mondays for weekly habits
+  - Earn points for completing habits
 
-   ```bash
-   npm install
-   ```
+- **Todo Management**
+  - Create one-time tasks
+  - Set due dates
+  - Earn points for completion
 
-2. Start the app
+- **Reward System**
+  - Create custom rewards
+  - Spend earned points on rewards
 
-   ```bash
-    npx expo start
-   ```
+- **Points System**
+  - Earn points for completing habits and todos
+  - Spend points on rewards
+  - Track total points balance
 
-In the output, you'll find options to open the app in a
+## Prerequisites
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Node.js (v14 or higher)
+- npm or yarn
+- Expo CLI
+- Android Studio (for Android development), Xcode (for iOS development) or just Expo GO app
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Installation
 
-## Get a fresh project
-
-When you're ready, run:
-
+1. Clone the repository:
 ```bash
-npm run reset-project
+git clone https://github.com/Pizzaold/HabitTracker
+cd HabitTrackerApp
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install dependencies:
+```bash
+yarn install
+# or
+npm install
+```
 
-## Learn more
+3. Install Expo Go on your mobile device from:
+   - [App Store](https://apps.apple.com/app/apple-store/id982107779)
+   - [Google Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
-To learn more about developing your project with Expo, look at the following resources:
+## Running the App
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+1. Start the development server:
+```bash
+yarn expo start
+# or
+npm run expo start
+```
 
-## Join the community
+2. Scan the QR code with:
+   - iOS: Camera app
+   - Android: Expo Go app
 
-Join our community of developers creating universal apps.
+Alternatively, press:
+- `a` to open on Android emulator
+- `i` to open on iOS simulator
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Project Structure
+
+```
+HabitTrackerApp/
+├── app/                    # Main application code
+│   ├── (tabs)/            # Tab-based navigation screens
+│   ├── interface.ts       # TypeScript interfaces
+│   └── utility.ts         # Utility functions
+├── components/            # Reusable components
+├── hooks/                 # Custom React hooks
+└── assets/               # Images and other static assets
+```
+
+## Key Components
+
+- `useAppData.ts`: Manages application state and data persistence
+- `useBackgroundTasks.ts`: Handles automatic habit resets
+- `HabitResetTester.tsx`: Test utility for habit reset functionality
+
+## Development Notes
+
+- The app uses Expo Router for navigation
+- Data is persisted using AsyncStorage
+- Background tasks run every 15 minutes to check and reset habits
+- Points system manages user progression
+- Habits and todos can be reordered using drag controls
+
+## Building for Production
+
+1. Configure app.json for your deployment needs
+
+2. Build for Android:
+```bash
+eas build -p android
+```
+
+3. Build for iOS:
+```bash
+eas build -p ios
+```
+
+## Troubleshooting
+
+If you encounter the plugin error during startup:
+1. Check app.json plugin configuration
+2. Clear Expo cache:
+```bash
+yarn expo start --clear
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+GNU General Public License v3.0
+
