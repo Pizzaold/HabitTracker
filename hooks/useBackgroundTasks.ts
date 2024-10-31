@@ -89,7 +89,7 @@ export const useBackgroundTasks = () => {
 
       if (!isRegistered) {
         await BackgroundFetch.registerTaskAsync(HABIT_RESET_TASK, {
-          minimumInterval: 60 * 15,
+          minimumInterval: 60 * 5,
           stopOnTerminate: false,
           startOnBoot: true,
         });

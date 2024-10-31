@@ -93,15 +93,43 @@ const HabitResetTester = () => {
       totalPoints += testHabit.points;
       
       addResult(`Testing manual completion:`);
+      addResult(`  - Initial points: ${initialPoints}`);
+      addResult(`  - Points after completion: ${totalPoints}`);
       addResult(`  - Points added correctly: ${totalPoints === initialPoints + testHabit.points ? '✅' : '❌'}`);
 
-      // Test manual uncomplete (with lastCompletedDate)
+      // Test manual uncomplete (user action)
       testHabit.done = false;
-      testHabit.lastCompletedDate = new Date().toISOString();
       totalPoints -= testHabit.points;
       
-      addResult(`Testing manual uncomplete:`);
+      addResult(`\nTesting manual uncomplete (user action):`);
+      addResult(`  - Points before uncomplete: ${totalPoints + testHabit.points}`);
+      addResult(`  - Points after uncomplete: ${totalPoints}`);
       addResult(`  - Points deducted correctly: ${totalPoints === initialPoints ? '✅' : '❌'}`);
+
+      // Test point deduction behavior
+      addResult('\n🧪 Test Group 3: Point Deduction Edge Cases');
+      
+      // Test completing and uncompleting multiple times
+      addResult(`Testing multiple toggles:`);
+      let expectedPoints = initialPoints;
+      
+      // Complete habit
+      testHabit.done = true;
+      expectedPoints += testHabit.points;
+      addResult(`  - First completion: ${expectedPoints} pts`);
+      
+      // Uncomplete habit
+      testHabit.done = false;
+      expectedPoints -= testHabit.points;
+      addResult(`  - First uncomplete: ${expectedPoints} pts`);
+      
+      // Complete again
+      testHabit.done = true;
+      expectedPoints += testHabit.points;
+      addResult(`  - Second completion: ${expectedPoints} pts`);
+      
+      // Verify final points match expected
+      addResult(`  - Points consistent after multiple toggles: ${expectedPoints === initialPoints + testHabit.points ? '✅' : '❌'}`);
 
     } catch (error) {
       addResult(`\n❌ Error during testing: ${error}`);

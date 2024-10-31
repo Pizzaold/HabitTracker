@@ -36,15 +36,6 @@ export default function TabsLayout() {
           ),
         }}
       />
-{/*       <Tabs.Screen
-        name="test"
-        options={{
-          title: "Test",
-          tabBarIcon: ({ color }) => (
-            <Feather size={28} name="info" color={color} />
-          ),
-        }}
-      /> */}
     </Tabs>
   );
 }
