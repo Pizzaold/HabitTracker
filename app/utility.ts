@@ -140,3 +140,72 @@ export const updatePoints = async (data: AppData, points: number): Promise<AppDa
     await saveData(newData);
     return newData;
 };
+
+export const checkAndResetHabits = async (data: AppData): Promise<AppData> => {
+    if (!data?.habits) return data;
+  
+    const now = new Date();
+    const resetTime = new Date(now);
+    resetTime.setHours(0, 0, 0, 0);
+  
+    let hasUpdates = false;
+    const updatedHabits = { ...data.habits };
+  
+    for (const habitId in updatedHabits) {
+      const habit = updatedHabits[habitId];
+      const lastCompleted = habit.lastCompletedDate
+        ? new Date(habit.lastCompletedDate)
+        : null;
+  
+      if (habit.frequency === "daily") {
+        if (lastCompleted) {
+          const lastCompletedMidnight = new Date(lastCompleted);
+          lastCompletedMidnight.setHours(0, 0, 0, 0);
+  
+          if (resetTime.getTime() > lastCompletedMidnight.getTime()) {
+            hasUpdates = true;
+            updatedHabits[habitId] = {
+              ...habit,
+              done: false,
+              lastCompletedDate: undefined,
+            };
+          }
+        } else if (!lastCompleted) {
+          updatedHabits[habitId] = {
+            ...habit,
+            currentStreak: 0,
+          };
+        }
+      } else if (habit.frequency === "weekly" && now.getDay() === 1) {
+        if (lastCompleted) {
+          const lastCompletedMidnight = new Date(lastCompleted);
+          lastCompletedMidnight.setHours(0, 0, 0, 0);
+  
+          if (resetTime.getTime() > lastCompletedMidnight.getTime()) {
+            hasUpdates = true;
+            updatedHabits[habitId] = {
+              ...habit,
+              done: false,
+              lastCompletedDate: undefined,
+            };
+          }
+        } else if (!lastCompleted) {
+          updatedHabits[habitId] = {
+            ...habit,
+            currentStreak: 0,
+          };
+        }
+      }
+    }
+  
+    if (hasUpdates) {
+      const updatedData = {
+        ...data,
+        habits: updatedHabits,
+      };
+      await saveData(updatedData);
+      return updatedData;
+    }
+  
+    return data;
+  };  

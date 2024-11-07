@@ -164,7 +164,7 @@ const HabitResetTester = () => {
     return {
       ...habit,
       done: false,
-      lastCompletedDate: undefined,  // Critical for preventing points deduction
+      lastCompletedDate: undefined,
     };
   };
 

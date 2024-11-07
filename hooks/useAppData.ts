@@ -17,22 +17,25 @@ export function useAppData() {
   const refreshData = useCallback(async () => {
     setIsLoading(true);
     const data = await Utils.getStoredData();
-    setAppData(data || DEFAULT_DATA);
+    const initialData = data || DEFAULT_DATA;
+    
+    const updatedData = await Utils.checkAndResetHabits(initialData);
+    setAppData(updatedData);
     setIsLoading(false);
   }, []);
+
 
   useEffect(() => {
     refreshData();
   }, [refreshData]);
 
   const updatePoints = async (delta: number) => {
-    const newPoints = appData.points + delta; // Allows negative points
+    const newPoints = appData.points + delta;
     const updatedData = await Utils.updatePoints(appData, newPoints);
     setAppData(updatedData);
     return updatedData;
   };
 
-  // Delete functions - simplified to just remove the item without affecting points
   const deleteHabit = async (habit: Habit) => {
     try {
       const updatedData = await Utils.deleteHabit(appData, habit.id!);
