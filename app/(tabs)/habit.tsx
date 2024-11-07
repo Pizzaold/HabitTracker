@@ -18,11 +18,14 @@ import { useBackgroundTasks } from "@/hooks/useBackgroundTasks";
 import React from "react";
 import * as Utils from '@/app/utility';
 import { ReorderableList } from '@/components/ReorderableList';
+import { EditModalForm } from "../editModelForm";
 
 const HabitScreen = () => {
   const { appData, isLoading, updateHabit, deleteHabit, refreshData } = useAppData();
   const { registerBackgroundTasks } = useBackgroundTasks();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
 
   useEffect(() => {
     registerBackgroundTasks();
@@ -67,30 +70,31 @@ const HabitScreen = () => {
 
 
   const handleLongPress = (habit: Habit) => {
-    Alert.alert(
-      "Delete Habit",
-      `Are you sure you want to delete "${habit.name}"?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            setIsDeleting(true);
-            try {
-              const success = await deleteHabit(habit);
-              if (!success) {
-                Alert.alert("Error", "Failed to delete habit");
-              }
-            } catch (error) {
-              console.error("Error deleting habit:", error);
-              Alert.alert("Error", "Failed to delete habit");
-            }
-            setIsDeleting(false);
-          },
-        },
-      ]
-    );
+    setSelectedHabit(habit);
+    setEditModalVisible(true);
+  };
+
+  const handleSaveEdit = async (updatedHabit: Habit) => {
+    try {
+      await updateHabit(updatedHabit);
+    } catch (error) {
+      console.error('Error updating habit:', error);
+      Alert.alert('Error', 'Failed to update habit');
+    }
+  };
+
+  const handleDelete = async (habit: Habit) => {
+    setIsDeleting(true);
+    try {
+      const success = await deleteHabit(habit);
+      if (!success) {
+        Alert.alert('Error', 'Failed to delete habit');
+      }
+    } catch (error) {
+      console.error('Error deleting habit:', error);
+      Alert.alert('Error', 'Failed to delete habit');
+    }
+    setIsDeleting(false);
   };
 
   const handleReorder = async (fromIndex: number, toIndex: number) => {
@@ -214,6 +218,19 @@ const HabitScreen = () => {
           })
         }
       />
+      {selectedHabit && (
+        <EditModalForm
+          visible={editModalVisible}
+          onClose={() => {
+            setEditModalVisible(false);
+            setSelectedHabit(null);
+          }}
+          onSave={(item) => handleSaveEdit(item as Habit)}
+          onDelete={(item) => handleDelete(item as Habit)}
+          item={selectedHabit}
+          type="habit"
+        />
+      )}
     </SafeAreaView>
   );
 };

@@ -10,10 +10,13 @@ import { useAppData } from "@/hooks/useAppData";
 import React from "react";
 import * as Utils from '@/app/utility';
 import { ReorderableList } from '@/components/ReorderableList';
+import { EditModalForm } from "../editModelForm";
 
 const TodoScreen = () => {
   const { appData, isLoading, updateTodo, deleteTodo, refreshData } = useAppData();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -34,30 +37,31 @@ const TodoScreen = () => {
   };
 
   const handleLongPress = (todo: Todo) => {
-    Alert.alert(
-      "Delete Task",
-      `Are you sure you want to delete "${todo.name}"?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            setIsDeleting(true);
-            try {
-              const success = await deleteTodo(todo);
-              if (!success) {
-                Alert.alert('Error', 'Failed to delete task');
-              }
-            } catch (error) {
-              console.error('Error deleting task:', error);
-              Alert.alert('Error', 'Failed to delete task');
-            }
-            setIsDeleting(false);
-          }
-        }
-      ]
-    );
+    setSelectedTodo(todo);
+    setEditModalVisible(true);
+  };
+
+  const handleSaveEdit = async (updatedTodo: Todo) => {
+    try {
+      await updateTodo(updatedTodo);
+    } catch (error) {
+      console.error('Error updating todo:', error);
+      Alert.alert('Error', 'Failed to update todo');
+    }
+  };
+  
+  const handleDelete = async (todo: Todo) => {
+    setIsDeleting(true);
+    try {
+      const success = await deleteTodo(todo);
+      if (!success) {
+        Alert.alert('Error', 'Failed to delete todo');
+      }
+    } catch (error) {
+      console.error('Error deleting todo:', error);
+      Alert.alert('Error', 'Failed to delete todo');
+    }
+    setIsDeleting(false);
   };
 
   const handleReorder = async (fromIndex: number, toIndex: number) => {
@@ -179,6 +183,19 @@ const TodoScreen = () => {
           })
         }
       />
+      {selectedTodo && (
+        <EditModalForm
+          visible={editModalVisible}
+          onClose={() => {
+            setEditModalVisible(false);
+            setSelectedTodo(null);
+          }}
+          onSave={(item) => handleSaveEdit(item as Todo)}
+          onDelete={(item) => handleDelete(item as Todo)}
+          item={selectedTodo}
+          type="todo"
+        />
+      )}
     </SafeAreaView>
   );
 };

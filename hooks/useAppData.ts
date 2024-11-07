@@ -69,22 +69,33 @@ export function useAppData() {
     }
   };
 
-const updateHabit = async (habit: Habit, isSystemUpdate: boolean = false) => {
-  const wasCompletedBefore = appData.habits[habit.id!]?.done || false;
-  const isCompletingNow = !wasCompletedBefore && habit.done;
-  const isUserUncompletingNow = !isSystemUpdate && wasCompletedBefore && !habit.done;
+  const updateHabit = async (habit: Habit, isSystemUpdate: boolean = false) => {
+    const wasCompletedBefore = appData.habits[habit.id!]?.done || false;
+    const isCompletingNow = !wasCompletedBefore && habit.done;
+    const isUserUncompletingNow = !isSystemUpdate && wasCompletedBefore && !habit.done;
 
-  let updatedData = await Utils.updateHabit(appData, habit);
-  
-  if (isCompletingNow) {
-      updatedData = await Utils.updatePoints(updatedData, updatedData.points + habit.points);
-  } else if (isUserUncompletingNow) {
-      updatedData = await Utils.updatePoints(updatedData, updatedData.points - habit.points);
-  }
-  
-  setAppData(updatedData);
-  return updatedData;
-};
+    let updatedData = await Utils.updateHabit(appData, habit);
+    
+    if (isCompletingNow) {
+        updatedData = await Utils.updatePoints(updatedData, updatedData.points + habit.points);
+    } else if (isUserUncompletingNow) {
+        updatedData = await Utils.updatePoints(updatedData, updatedData.points - habit.points);
+    }
+    
+    setAppData(updatedData);
+    return updatedData;
+  };
+
+  const updateReward = async (reward: Reward) => {
+    try {
+      const updatedData = await Utils.updateReward(appData, reward);
+      setAppData(updatedData);
+      return updatedData;
+    } catch (error) {
+      console.error('Error updating reward:', error);
+      throw error;
+    }
+  };
 
   const updateTodo = async (todo: Todo) => {
     const wasCompletedBefore = appData.todo[todo.id!]?.done || false;
@@ -172,5 +183,6 @@ const updateHabit = async (habit: Habit, isSystemUpdate: boolean = false) => {
     addReward,
     deleteReward,
     claimReward,
+    updateReward
   };
 }

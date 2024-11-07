@@ -10,10 +10,13 @@ import { useAppData } from "@/hooks/useAppData";
 import React from "react";
 import * as Utils from '@/app/utility';
 import { ReorderableList } from '@/components/ReorderableList';
+import { EditModalForm } from "../editModelForm";
 
 const RewardScreen = () => {
-  const { appData, isLoading, deleteReward, claimReward, refreshData } = useAppData();
+  const { appData, isLoading, deleteReward, claimReward, refreshData, updateReward } = useAppData();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -25,9 +28,10 @@ const RewardScreen = () => {
     try {
       const success = await claimReward(reward);
       if (success) {
+        const updatedPoints = appData.points - reward.points;
         Alert.alert(
           'Reward Claimed!',
-          `You have successfully claimed "${reward.name}". ${appData.points} points remaining.`,
+          `You have successfully claimed "${reward.name}". ${updatedPoints} points remaining.`,
           [{ text: 'OK' }]
         );
       } else {
@@ -40,30 +44,31 @@ const RewardScreen = () => {
   };
 
   const handleLongPress = (reward: Reward) => {
-    Alert.alert(
-      "Delete Reward",
-      `Are you sure you want to delete "${reward.name}"?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            setIsDeleting(true);
-            try {
-              const success = await deleteReward(reward);
-              if (!success) {
-                Alert.alert('Error', 'Failed to delete reward');
-              }
-            } catch (error) {
-              console.error('Error deleting reward:', error);
-              Alert.alert('Error', 'Failed to delete reward');
-            }
-            setIsDeleting(false);
-          }
-        }
-      ]
-    );
+    setSelectedReward(reward);
+    setEditModalVisible(true);
+  };
+
+  const handleSaveEdit = async (updatedReward: Reward) => {
+    try {
+      await updateReward(updatedReward);
+    } catch (error) {
+      console.error('Error updating reward:', error);
+      Alert.alert('Error', 'Failed to update reward');
+    }
+  };
+  
+  const handleDelete = async (reward: Reward) => {
+    setIsDeleting(true);
+    try {
+      const success = await deleteReward(reward);
+      if (!success) {
+        Alert.alert('Error', 'Failed to delete reward');
+      }
+    } catch (error) {
+      console.error('Error deleting reward:', error);
+      Alert.alert('Error', 'Failed to delete reward');
+    }
+    setIsDeleting(false);
   };
 
   const handleReorder = async (fromIndex: number, toIndex: number) => {
@@ -110,6 +115,9 @@ const RewardScreen = () => {
         style={{ flex: 1 }}
       >
         <Text style={styles.title}>{reward.name}</Text>
+        {reward.description && (
+          <Text style={styles.description}>{reward.description}</Text>
+        )}
         <Text style={[styles.pointsText, styles.rewardPoints]}>
           {reward.points} points needed
         </Text>
@@ -172,6 +180,19 @@ const RewardScreen = () => {
           })
         }
       />
+      {selectedReward && (
+        <EditModalForm
+          visible={editModalVisible}
+          onClose={() => {
+            setEditModalVisible(false);
+            setSelectedReward(null);
+          }}
+          onSave={(item) => handleSaveEdit(item as Reward)}
+          onDelete={(item) => handleDelete(item as Reward)}
+          item={selectedReward}
+          type="reward"
+        />
+      )}
     </SafeAreaView>
   );
 };
