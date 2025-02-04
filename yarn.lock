@@ -3900,10 +3900,10 @@ expo-splash-screen@~0.27.5:
   dependencies:
     "@expo/prebuild-config" "7.0.8"
 
-expo-status-bar@~1.12.1:
-  version "1.12.1"
-  resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-1.12.1.tgz#52ce594aab5064a0511d14375364d718ab78aa66"
-  integrity sha512-/t3xdbS8KB0prj5KG5w7z+wZPFlPtkgs95BsmrP/E7Q0xHXTcDcQ6Cu2FkFuRM+PKTb17cJDnLkawyS5vDLxMA==
+expo-status-bar@~2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-2.0.1.tgz#fc07726346dc30fbb68aadb0d7890b34fba42eee"
+  integrity sha512-AkIPX7jWHRPp83UBZ1iXtVvyr0g+DgBVvIXTtlmPtmUsm8Vq9Bb5IGj86PW8osuFlgoTVAg7HI/+Ok7yEYwiRg==
 
 expo-system-ui@~3.0.7:
   version "3.0.7"
