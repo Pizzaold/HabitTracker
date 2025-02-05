@@ -41,4 +41,4 @@ interface AppData {
     points: number;
 }
 
-export { Habit, Todo, Reward, AppData, Day, FrequencyType}
+export type { Habit, Todo, Reward, AppData, Day, FrequencyType}

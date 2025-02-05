@@ -18,7 +18,7 @@ import { useBackgroundTasks } from "@/hooks/useBackgroundTasks";
 import React from "react";
 import * as Utils from '@/app/utility';
 import { ReorderableList } from '@/components/ReorderableList';
-import { EditModalForm } from "../editModelForm";
+import EditModalForm from "../editModelForm";
 
 const HabitScreen = () => {
   const { appData, isLoading, updateHabit, deleteHabit, refreshData } = useAppData();

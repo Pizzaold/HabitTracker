@@ -1,4 +1,5 @@
 // /app/(tabs)/_layout.tsx
+import React from "react";
 import { Tabs } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 

@@ -21,7 +21,7 @@ interface EditModalFormProps {
   type: 'habit' | 'todo' | 'reward';
 }
 
-export const EditModalForm = ({
+const EditModalForm = ({
   visible,
   onClose,
   onSave,
@@ -231,3 +231,5 @@ export const EditModalForm = ({
     </Modal>
   );
 };
+
+export default EditModalForm;

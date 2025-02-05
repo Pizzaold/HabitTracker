@@ -10,7 +10,7 @@ import { useAppData } from "@/hooks/useAppData";
 import React from "react";
 import * as Utils from '@/app/utility';
 import { ReorderableList } from '@/components/ReorderableList';
-import { EditModalForm } from "../editModelForm";
+import EditModalForm from "../editModelForm";
 
 const RewardScreen = () => {
   const { appData, isLoading, deleteReward, claimReward, refreshData, updateReward } = useAppData();

@@ -1,4 +1,5 @@
 // /app/form.tsx
+import React from "react";
 import { View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import styles from "./style";
