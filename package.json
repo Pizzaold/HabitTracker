@@ -19,6 +19,7 @@
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "8.2.0",
     "@react-navigation/native": "^6.0.2",
+    "cross-spawn": "^7.0.6",
     "expo": "^52.0.30",
     "expo-background-fetch": "~13.0.5",
     "expo-constants": "~17.0.5",
